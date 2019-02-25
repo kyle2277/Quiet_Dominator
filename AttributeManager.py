@@ -20,3 +20,22 @@ class AttributeManager:
         2: ['user squares', 'list', check_list],
         3: ['final', None, None]
     }
+
+    def train(self, file, tree):
+        training_data = self.extract_data(file)
+        for data in training_data:
+
+
+    def extract_data(self, file):
+        training_data = []
+        with open(file, 'r') as f:
+            for line in f:
+                line= line.replace("\n", "")
+                package = line.split("|")
+                data = []
+                for info in package:
+                    info = str(info)
+                    separated = info.split(",")
+                    data.append(separated)
+                training_data.append(data)
+        return training_data
