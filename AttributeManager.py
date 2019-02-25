@@ -3,14 +3,25 @@ class AttributeManager:
     def __init__(self):
         pass
 
-    def check_first(self, com_moves, user_moves):
-        return len(com_moves) == len(user_moves)  # if true then com went first
+    def check_first(self, com_moves, user_moves, decisions):
+        if len(com_moves) == len(user_moves):  # if true then com went first
+            a = ['first']
+            return tuple(a)
+        else:
+            a = ['second']
+            return tuple(a)
 
-    def check_list(self, list_moves, decision):
-        return list_moves == decision
+    def check_list(self, com_moves, user_moves, decisions):
+        for key, val in decisions.items():
+            if com_moves == key:
+                return key
+        return None
 
     def check_val(self, val, decision_val):  # check a string or int
-        return val == decision_val
+        if val == decision_val:
+            return decision_val
+        else:
+            return None
 
     # TODO write a method to check if won or lost
 
@@ -24,7 +35,7 @@ class AttributeManager:
     def train(self, file, tree):
         training_data = self.extract_data(file)
         for data in training_data:
-
+            pass
 
     def extract_data(self, file):
         training_data = []
@@ -36,6 +47,6 @@ class AttributeManager:
                 for info in package:
                     info = str(info)
                     separated = info.split(",")
-                    data.append(separated)
+                    data.append(tuple(separated))
                 training_data.append(data)
         return training_data

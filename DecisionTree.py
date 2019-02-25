@@ -8,6 +8,7 @@ class DecisionTree:
     def __init__(self, manager, f, new_tree=False):
         self.nodes = []
         self.manager = manager
+        self.layers = len(self.manager.attributes_dict)
         self.overall_root = TreeNode(0, manager)
         if new_tree:
             # todo ready for training
@@ -17,17 +18,18 @@ class DecisionTree:
 
     def build_tree(self, f):
         node_count = f.readline().replace("\n", "").split(',')
+        # print(node_count)
         self.overall_root = self.build_recur(self.overall_root, f, node_count, 1)
 
     def build_recur(self, root, f, node_count, layer):
         count = node_count.pop(0)
-        if '0' not in count:
+        if '@' not in count:
             for i in range(int(count)):
                 decision = tuple(f.readline().replace("\n", "").split(','))
                 new_node = TreeNode(layer, self.manager)
                 root.add_decision(decision, self.build_recur(new_node, f, node_count, layer+1))
         else:  # end of the tree
-            root.attribute_name = int(count)
+            root.attribute_name = int(count.replace("@", ""))
         self.nodes.append(root)
         return root
 
@@ -62,8 +64,22 @@ class DecisionTree:
             node = self.decisions_recur(node, dec_list)
         return root
 
+    def make_decision(self, com, user):
+        return self.make_decision_recur(com, user, self.overall_root)
+
+    def make_decision_recur(self, com, user, root):
+        if root.decisions:
+            value_next = root.decide(com, user)
+            if value_next:
+                value = self.make_decision_recur(com, user, root.decisions[value_next])
+            else:
+                return "branch does not exist"
+            return value
+        else:
+            return root.attribute_name
+
     def print_tree(self):
-        for i in range(len(self.manager.attributes_dict)):
+        for i in range(self.layers):
             for node in self.nodes:
                 if node.attribute_number == i:
                     print('|', node.attribute_name, " ", node.attribute_number, '| ', end="")
