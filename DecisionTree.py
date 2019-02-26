@@ -1,5 +1,6 @@
 import os
 import sys
+import random
 from TreeNode import TreeNode
 
 
@@ -64,19 +65,33 @@ class DecisionTree:
             node = self.decisions_recur(node, dec_list)
         return root
 
-    def make_decision(self, com, user):
-        return self.make_decision_recur(com, user, self.overall_root)
+    def make_decision(self, com, user, training=False):
+        return self.make_decision_recur(com, user, self.overall_root, training)
 
-    def make_decision_recur(self, com, user, root):
+    def make_decision_recur(self, com, user, root, training=False):
         if root.decisions:
             value_next = root.decide(com, user)
             if value_next:
-                value = self.make_decision_recur(com, user, root.decisions[value_next])
+                value = self.make_decision_recur(com, user, root.decisions[value_next], training)
             else:
-                return "branch does not exist"
+                if training:
+                    # todo manager object management
+                    new_decision = TreeNode(root.attribute_number+1, root.manager)
+                    root.add_decision(com, user, new_decision)
+                    pass
+                    #  if in training mode, add decisions from data
+                else:
+                    # todo com and user management
+                    #  if in playing mode, generate random number that has not been chosen yet
+                    taken = com + user
+                    value = str(random.randint(1, 9))
+                    while value in taken:
+                        value = str(random.randint(1, 9))
             return value
         else:
             return root.attribute_name
+
+    def add_decision(self, root, com, user, new_node):
 
     def print_tree(self):
         for i in range(self.layers):

@@ -23,7 +23,7 @@ def __init__():
         # board.move(5, 'user')
         # board.move(3, 'com')
         # board.move(1, 'user')
-        print(tree.make_decision(("1", "2"), ("3", "4")))
+        print(tree.make_decision(("1", "2"), ("3", "4"), training=False))
         manager.train('training.txt', tree)
 
 
