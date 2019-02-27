@@ -1,6 +1,4 @@
 import os
-import sys
-import random
 from TreeNode import TreeNode
 
 
@@ -19,16 +17,17 @@ class DecisionTree:
 
     def build_tree(self, f):
         node_count = f.readline().replace("\n", "").split(',')
-        # print(node_count)
-        self.overall_root = self.build_recur(self.overall_root, f, node_count, 1)
+        self.overall_root = self.build_recur(self.overall_root, f, node_count)
 
-    def build_recur(self, root, f, node_count, layer):
+    def build_recur(self, root, f, node_count):
         count = node_count.pop(0)
         if '@' not in count:
             for i in range(int(count)):
                 decision = tuple(f.readline().replace("\n", "").split(','))
-                new_node = TreeNode(layer, self.manager)
-                root.add_decision(decision, self.build_recur(new_node, f, node_count, layer+1))
+                if decision == "_":
+                    decision = ()
+                new_node = TreeNode(root.attribute_number + 1, self.manager)
+                root.add_decision(decision, self.build_recur(new_node, f, node_count))
         else:  # end of the tree
             root.attribute_name = int(count.replace("@", ""))
         self.nodes.append(root)
@@ -41,7 +40,7 @@ class DecisionTree:
         self.overall_root = self.save_recur(self.overall_root, child_count)
         add = ",".join(child_count) + "\n"
         dec_list = []
-        self.overall_root = self.decisions_recur(self.overall_root, dec_list)
+        dec_list = self.decisions_recur(self.overall_root, dec_list)
         add_dec = ""
         for dec in dec_list:
             add_dec = add_dec + ",".join(dec) + "\n"
@@ -55,43 +54,37 @@ class DecisionTree:
             for node in root.decisions.values():
                 node = self.save_recur(node, child_count)
         else:
-            add = str(0) + str(root.attribute_name)
+            add = str("@") + str(root.attribute_name)
             child_count.append(add)
         return root
 
     def decisions_recur(self, root, dec_list):
         for dec, node in root.decisions.items():
-            dec_list.append(dec)
-            node = self.decisions_recur(node, dec_list)
-        return root
-
-    def make_decision(self, com, user, training=False):
-        return self.make_decision_recur(com, user, self.overall_root, training)
-
-    def make_decision_recur(self, com, user, root, training=False):
-        if root.decisions:
-            value_next = root.decide(com, user)
-            if value_next:
-                value = self.make_decision_recur(com, user, root.decisions[value_next], training)
+            if not dec:
+                empty = ("_",)
+                dec_list.append(empty)
             else:
-                if training:
-                    # todo manager object management
-                    new_decision = TreeNode(root.attribute_number+1, root.manager)
-                    root.add_decision(com, user, new_decision)
-                    pass
-                    #  if in training mode, add decisions from data
-                else:
-                    # todo com and user management
-                    #  if in playing mode, generate random number that has not been chosen yet
-                    taken = com + user
-                    value = str(random.randint(1, 9))
-                    while value in taken:
-                        value = str(random.randint(1, 9))
+                dec_list.append(dec)
+                dec_list = self.decisions_recur(node, dec_list)
+        return dec_list
+
+    def make_decision(self, game):
+        return self.make_decision_recur(game, self.overall_root)
+
+    def make_decision_recur(self, game, root):
+        if root.decisions:
+            player = root.attribute_name
+            value_next = root.decide(game, player)
+            if value_next:
+                value = self.make_decision_recur(game, root.decisions[value_next])
+            else:
+                # todo com and user management
+                #  if in playing mode, generate random number that has not been chosen yet
+                print("random")
+                value = self.manager.random(game)
             return value
         else:
             return root.attribute_name
-
-    def add_decision(self, root, com, user, new_node):
 
     def print_tree(self):
         for i in range(self.layers):

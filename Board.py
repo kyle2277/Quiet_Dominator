@@ -5,32 +5,36 @@ from three_by_three_rules import three_by_three_win
 class Board:
 
     def __init__(self, dimension, numbered=True):
-        self.board = []
+        self.board_list = []
         # self.board.append([Status.none.value] * dimension)
         count = 1
-        for i in range(dimension):
-            for j in range(dimension):
+        self.dimension = int(dimension)
+        for i in range(self.dimension):
+            for j in range(self.dimension):
                 if numbered:
-                    self.board.append(count)
+                    self.board_list.append(count)
                 else:
-                    self.board.append(Status.none.value)
+                    self.board_list.append(Status.none.value)
                 count = count + 1
-        self.dimension = dimension
-        self.print_board()
+        # self.print_board()
 
     def move(self, move, player):
         if not self.check_valid_move(move):
             return False
-        self.board[move-1] = Status[player].value
-        squares = three_by_three_win(self.board, player)
+        self.board_list[move-1] = Status[player].value
+        print(self.board_list)
+        squares = three_by_three_win(self.board_list, self.dimension, player)
         if squares:
+            if 0 in squares:
+                print(squares)
+                self.print_board()
             self.print_board(True, squares)
         else:
             self.print_board()
         return True
 
     def check_valid_move(self, move):
-        return self.board[move-1] is not Status.com.value and self.board[move-1] is not Status.user.value
+        return self.board_list[move-1] is not Status.com.value and self.board_list[move-1] is not Status.user.value
 
     def draw_walls(self):
         wall = ["|   "] * self.dimension
@@ -59,7 +63,7 @@ class Board:
                 self.draw_walls()
                 m2 = []
                 for j in range(self.dimension):
-                    m2_add = "| " + str(self.board[count]) + " "
+                    m2_add = "| " + str(self.board_list[count]) + " "
                     count = count + 1
                     m2.append(m2_add)
                 m2.append("|")
@@ -78,11 +82,14 @@ class Board:
                     if count+1 in squares:
                         m2_add = "| @ "
                     else:
-                        m2_add = "| " + str(self.board[count]) + " "
+                        m2_add = "| " + str(self.board_list[count]) + " "
                     count = count + 1
                     m2.append(m2_add)
                 m2.append("|")
                 m2_draw = "".join(m2)
                 print(m2_draw)
                 self.draw_wall_bottom()
+
+    def check_win(self, board_list, dimension, player):
+        return three_by_three_win(board_list, dimension, player)
 

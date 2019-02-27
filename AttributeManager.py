@@ -1,19 +1,27 @@
+import random
+from collections import OrderedDict
+from Board import Board
+import math
+from Status import Status
+from TreeNode import TreeNode
+
+
 class AttributeManager:
 
     def __init__(self):
         pass
 
-    def check_first(self, com_moves, user_moves, decisions):
-        if len(com_moves) == len(user_moves):  # if true then com went first
+    def check_first(self, game, decisions, player):
+        if len(game['com']) == len(game['user']):  # if true then com went first
             a = ['first']
             return tuple(a)
         else:
             a = ['second']
             return tuple(a)
 
-    def check_list(self, com_moves, user_moves, decisions):
+    def check_list(self, game, decisions, player):
         for key, val in decisions.items():
-            if com_moves == key:
+            if game[player] == key:
                 return key
         return None
 
@@ -23,19 +31,29 @@ class AttributeManager:
         else:
             return None
 
+    def random(self, game):
+        taken = game['com'] + game['user']
+        value = str(random.randint(1, 9))
+        while value in taken:
+            value = str(random.randint(1, 9))
+        return value
+
     # TODO write a method to check if won or lost
 
     attributes_dict = {
-        0: ['who went first', 'bool', check_first],
-        1: ['com squares', 'list', check_list],
-        2: ['user squares', 'list', check_list],
+        0: ['first', 'bool', check_first],
+        1: ['com', 'list', check_list],
+        2: ['user', 'list', check_list],
         3: ['final', None, None]
     }
 
     def train(self, file, tree):
         training_data = self.extract_data(file)
         for data in training_data:
-            pass
+            game = OrderedDict()
+            game['com'] = data[0]
+            game['user'] = data[1]
+            self.trainer(game, tree)
 
     def extract_data(self, file):
         training_data = []
@@ -50,3 +68,74 @@ class AttributeManager:
                     data.append(tuple(separated))
                 training_data.append(data)
         return training_data
+
+    def trainer(self, game, tree):
+        dimension = math.sqrt(len(game['com'] + game['user']))
+        board = self.game2board(game, dimension)
+        if board.check_win(board, dimension, 'com'):
+            # send to be added to tree
+            self.dispatch(game, tree)
+        elif board.check_win(board, dimension, 'user'):
+            # switch com and user and then send to be added to tree
+            new_game = OrderedDict()
+            new_game['com'] = game['user']
+            new_game['user'] = game['com']
+            self.dispatch(new_game, tree)
+            # send to be added to tree
+
+    def game2board(self, game, dimension):
+        cur_board = Board(dimension, numbered=False)
+        for com in game['com']:
+            cur_board.board_list[int(com) - 1] = Status.com.value
+        for user in game['user']:
+            cur_board.board_list[int(user) - 1] = Status.user.value
+        #  print completed board
+        cur_board.print_board()
+        return cur_board
+
+    def dispatch(self, game, tree):
+        com = game['com']
+        user = game['user']
+        com_moves = []
+        user_moves = []
+        if len(com) > len(user):  # com goes first
+            print("com first")
+            for i in range(4):
+                self.send(com_moves, user_moves, com[i], tree)
+                # print(com_moves, "\n", user_moves, "\n", com[i])
+                com_moves.append(com[i])
+                user_moves.azppend(user[i])
+                count = i
+            # print(com_moves, "\n", user_moves, "\n", com[count+1])
+            self.send(com_moves, user_moves, com[count + 1], tree)
+
+        else:  # user goes first
+            print("user first")
+            for j in range(4):
+                user_moves.append(user[j])
+                # print(com_moves, "\n", user_moves, "\n", com[j])
+                self.send(com_moves, user_moves, com[j], tree)
+                com_moves.append(com[j])
+
+    def send(self, com_moves, user_moves, next_move, tree):
+        game = OrderedDict()
+        game['com'] = tuple(com_moves)
+        game['user'] = tuple(user_moves)
+        tree.overall_root = self.add_node(tree.overall_root, game, next_move)
+
+    def add_node(self, root, game, next_move):
+        traverse = root.decide(game, self.attributes_dict[root.attribute_number][0])
+        if traverse in root.decisions:
+            root.decisions[traverse] = self.add_node(root.decisions[traverse], game, next_move)
+        elif self.attributes_dict[root.attribute_number + 1][0] != 'final':
+            new_node = TreeNode(root.attribute_number+1, self)
+            key = self.attributes_dict[root.attribute_number][0]
+            root.add_decision(game[key], new_node)
+            root.decisions[game[key]] = self.add_node(root.decisions[game[key]], game, next_move)
+        else:  # final branch, next node is the decision
+            key = self.attributes_dict[root.attribute_number][0]
+            new_node = TreeNode(root.attribute_number+1, self)
+            new_node.set_name(next_move)
+            root.add_decision(game[key], new_node)
+        return root
+

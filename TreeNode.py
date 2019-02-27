@@ -12,12 +12,12 @@ class TreeNode:
         self.decision_type = manager.attributes_dict[attribute_number][1]
         self.func_check = manager.attributes_dict[attribute_number][2]
 
-    def add_decision(self, decision, next_node):
-        self.decisions[decision] = next_node
-
-    def decide(self, com, user):
-        return self.func_check(self.manager, com_moves=com, user_moves=user, decisions=self.decisions)
-
-    def add_decision(self, decision, node):
-        self.decisions[decision] = node
+    def add_decision(self, decision, new_node):
+        self.decisions[decision] = new_node
         self.num_children = len(self.decisions)
+
+    def decide(self, game, player):
+        return self.func_check(self.manager, game=game, decisions=self.decisions, player=player)
+
+    def set_name(self, name):
+        self.attribute_name = name
