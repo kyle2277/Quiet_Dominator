@@ -4,14 +4,15 @@ from TreeNode import TreeNode
 
 class DecisionTree:
 
-    def __init__(self, manager, f, new_tree=False):
+    def __init__(self, manager, file, new_tree=False):
+        f = open(file, 'r')
         self.nodes = []
         self.manager = manager
         self.layers = len(self.manager.attributes_dict)
         self.overall_root = TreeNode(0, manager)
         if new_tree:
             # todo ready for training
-            pass
+            print("ready for training.")
         else:
             self.build_tree(f)
 
