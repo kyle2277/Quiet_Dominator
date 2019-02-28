@@ -6,6 +6,7 @@ class Board:
 
     def __init__(self, dimension, numbered=True):
         self.board_list = []
+        self.won = False
         # self.board.append([Status.none.value] * dimension)
         count = 1
         self.dimension = int(dimension)
@@ -19,16 +20,20 @@ class Board:
         # self.print_board()
 
     def move(self, move, player):
+        move = int(move)
         if not self.check_valid_move(move):
             return False
         self.board_list[move-1] = Status[player].value
-        print(self.board_list)
+        # print(self.board_list)
         squares = three_by_three_win(self.board_list, self.dimension, player)
         if squares:
             if 0 in squares:
-                print(squares)
+                # print(squares)
                 self.print_board()
+                print("DRAW.")
+            print("\n%s WON." % player.upper())
             self.print_board(True, squares)
+            self.won = True
         else:
             self.print_board()
         return True

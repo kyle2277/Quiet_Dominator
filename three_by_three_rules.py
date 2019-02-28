@@ -1,20 +1,20 @@
 from Status import Status
 
 
-def three_by_three_win(board, dimension, player):
+def three_by_three_win(board_list, dimension, player):
     check = []
-    for count, x in enumerate(board.board_list):
+    for count, x in enumerate(board_list):
         if x == Status[player].value:
             check.append(count+1)
     for num in check:
-        squares = check_horiz(num, player, board.board_list)
+        squares = check_horiz(num, player, board_list)
         if squares:
             return squares
-        squares = check_vert(num, player, board.board_list)
+        squares = check_vert(num, player, board_list)
         if squares:
             return squares
         if num == 1 or num == 3 or num == 5 or num == 7 or num == 9:
-            squares = check_diag(num, player, board.board_list)
+            squares = check_diag(num, player, board_list)
             if squares:
                 return squares
     # todo more sophisticated draw detection
