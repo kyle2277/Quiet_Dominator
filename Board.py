@@ -94,6 +94,7 @@ class Board:
                 m2_draw = "".join(m2)
                 print(m2_draw)
                 self.draw_wall_bottom()
+        print()
 
     def check_win(self, board_list, dimension, player):
         return three_by_three_win(board_list, dimension, player)
