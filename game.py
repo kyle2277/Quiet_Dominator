@@ -2,6 +2,7 @@ from Board import Board
 from collections import OrderedDict
 import random
 
+
 class Game:
 
     def __init__(self, tree, manager, dimension, numbered):
@@ -16,8 +17,8 @@ class Game:
         self.dimension = dimension
         self.game_board = Board(dimension, numbered)
         fin_game = self.play()
-        # if self.game_board.won:
-        #     manager.trainer(fin_game)
+        if self.game_board.won:
+            manager.trainer(fin_game, tree, board=self.game_board, dimension=self.dimension)
 
     def play(self):
         functions = {
@@ -31,7 +32,6 @@ class Game:
             order['user'] = functions['user']
         else:
             order['com'] = functions['com']
-        check_move = True
         while not self.game_board.won:
             for player, func in order.items():
                 player_move = func()

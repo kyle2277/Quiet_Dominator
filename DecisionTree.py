@@ -24,9 +24,12 @@ class DecisionTree:
         count = node_count.pop(0)
         if '@' not in count:
             for i in range(int(count)):
-                decision = tuple(f.readline().replace("\n", "").split(','))
-                if decision == "_":
+                decision = f.readline().replace("\n", "").split(',')
+                # print(decision)
+                if "_" in decision:
                     decision = ()
+                else:
+                    decision = tuple(decision)
                 new_node = TreeNode(root.attribute_number + 1, self.manager)
                 root.add_decision(decision, self.build_recur(new_node, f, node_count))
         else:  # end of the tree
@@ -61,7 +64,8 @@ class DecisionTree:
 
     def decisions_recur(self, root, dec_list):
         for dec, node in root.decisions.items():
-            if not dec:
+            # todo fix empty decisions
+            if dec == ():
                 empty = ("_",)
                 dec_list.append(empty)
             else:
@@ -73,10 +77,10 @@ class DecisionTree:
         return self.make_decision_recur(game, self.overall_root)
 
     def make_decision_recur(self, game, root):
-        if root.decisions:
+        if root.decisions or root.attribute_number < 4:
             player = root.attribute_name
             value_next = root.decide(game, player)
-            if value_next:
+            if value_next in root.decisions:
                 value = self.make_decision_recur(game, root.decisions[value_next])
             else:
                 # todo com and user management

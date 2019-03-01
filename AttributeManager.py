@@ -13,15 +13,17 @@ class AttributeManager:
 
     def check_first(self, game, decisions, player):
         if len(game['com']) == len(game['user']):  # if true then com went first
-            a = ['first']
-            return tuple(a)
+            a = ('first',)
+            return a
         else:
-            a = ['second']
-            return tuple(a)
+            a = ('second',)
+            return a
 
     def check_list(self, game, decisions, player):
+        # todo decision to make when com and user are empty
         for key, val in decisions.items():
-            if game[player] == key:
+            decision = tuple(game[player])
+            if decision == key:
                 return key
         return None
 
@@ -30,6 +32,9 @@ class AttributeManager:
             return decision_val
         else:
             return None
+
+    def final(self, game, decisions, player):
+        return 'final'
 
     def random(self, game):
         taken = game['com'] + game['user']
@@ -44,16 +49,17 @@ class AttributeManager:
         0: ['first', 'bool', check_first],
         1: ['com', 'list', check_list],
         2: ['user', 'list', check_list],
-        3: ['final', None, None]
+        3: ['final', None, final],
+        4: ['choose', None, None]
     }
 
-    def train(self, file, tree):
+    def train(self, file, tree, dimension):
         training_data = self.extract_data(file)
         for data in training_data:
             game = OrderedDict()
             game['com'] = data[0]
             game['user'] = data[1]
-            self.trainer(game, tree)
+            self.trainer(game, tree, dimension)
 
     def extract_data(self, file):
         training_data = []
@@ -69,13 +75,13 @@ class AttributeManager:
                 training_data.append(data)
         return training_data
 
-    def trainer(self, game, tree):
-        dimension = math.sqrt(len(game['com'] + game['user']))
-        board = self.game2board(game, dimension)
-        if board.check_win(board, dimension, 'com'):
+    def trainer(self, game, tree, dimension, board=None):
+        if not board:
+            board = self.game2board(game, dimension)
+        if board.check_win(board.board_list, dimension, 'com'):
             # send to be added to tree
             self.dispatch(game, tree)
-        elif board.check_win(board, dimension, 'user'):
+        elif board.check_win(board.board_list, dimension, 'user'):
             # switch com and user and then send to be added to tree
             new_game = OrderedDict()
             new_game['com'] = game['user']
@@ -98,20 +104,19 @@ class AttributeManager:
         user = game['user']
         com_moves = []
         user_moves = []
-        if len(com) > len(user):  # com goes first
+        if len(com) >= len(user):  # com goes first
             print("com first")
-            for i in range(4):
+            for i in range(len(com)-1):
                 self.send(com_moves, user_moves, com[i], tree)
                 # print(com_moves, "\n", user_moves, "\n", com[i])
                 com_moves.append(com[i])
-                user_moves.azppend(user[i])
+                user_moves.append(user[i])
                 count = i
             # print(com_moves, "\n", user_moves, "\n", com[count+1])
             self.send(com_moves, user_moves, com[count + 1], tree)
-
         else:  # user goes first
             print("user first")
-            for j in range(4):
+            for j in range(len(user)-1):
                 user_moves.append(user[j])
                 # print(com_moves, "\n", user_moves, "\n", com[j])
                 self.send(com_moves, user_moves, com[j], tree)
@@ -127,15 +132,17 @@ class AttributeManager:
         traverse = root.decide(game, self.attributes_dict[root.attribute_number][0])
         if traverse in root.decisions:
             root.decisions[traverse] = self.add_node(root.decisions[traverse], game, next_move)
-        elif self.attributes_dict[root.attribute_number + 1][0] != 'final':
+        elif self.attributes_dict[root.attribute_number][0] == 'first':
+            new_node = TreeNode(root.attribute_number + 1, self)
+            decision = traverse
+            root.add_decision(decision, new_node)
+            root.decisions[decision] = self.add_node(root.decisions[decision], game, next_move)
+        elif self.attributes_dict[root.attribute_number][0] != 'final':
             new_node = TreeNode(root.attribute_number+1, self)
             key = self.attributes_dict[root.attribute_number][0]
             root.add_decision(game[key], new_node)
             root.decisions[game[key]] = self.add_node(root.decisions[game[key]], game, next_move)
-        else:  # final branch, next node is the decision
-            key = self.attributes_dict[root.attribute_number][0]
-            new_node = TreeNode(root.attribute_number+1, self)
-            new_node.set_name(next_move)
-            root.add_decision(game[key], new_node)
+        elif traverse == 'final':  # final branch, next node is the decision
+            root.set_name(next_move)
         return root
 

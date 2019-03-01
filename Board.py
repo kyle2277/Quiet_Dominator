@@ -17,7 +17,7 @@ class Board:
                 else:
                     self.board_list.append(Status.none.value)
                 count = count + 1
-        # self.print_board()
+        self.print_board()
 
     def move(self, move, player):
         move = int(move)
