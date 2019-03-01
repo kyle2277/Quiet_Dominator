@@ -79,10 +79,10 @@ def run(params, manager):
             file = options
             if os.path.isfile(file):
                 # todo training from main menu
-                pass
+                manager.train(file, TREE, dimension)
             else:
                 print("file %s does not exists" % file)
-            pass
+            TREE.save_tree(CURRENT_TREE)
     elif command == 'play':
         # start game
         numbered = False

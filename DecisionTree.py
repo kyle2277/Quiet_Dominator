@@ -70,14 +70,14 @@ class DecisionTree:
                 dec_list.append(empty)
             else:
                 dec_list.append(dec)
-                dec_list = self.decisions_recur(node, dec_list)
+            dec_list = self.decisions_recur(node, dec_list)
         return dec_list
 
     def make_decision(self, game):
         return self.make_decision_recur(game, self.overall_root)
 
     def make_decision_recur(self, game, root):
-        if root.decisions or root.attribute_number < 4:
+        if root.decisions or root.attribute_number < 3:
             player = root.attribute_name
             value_next = root.decide(game, player)
             if value_next in root.decisions:
@@ -95,7 +95,7 @@ class DecisionTree:
         for i in range(self.layers):
             for node in self.nodes:
                 if node.attribute_number == i:
-                    print('|', node.attribute_name, " ", node.attribute_number, '| ', end="")
+                    print('|', node.attribute_name, " ", node.attribute_number, " ", node.decisions, '| ', end="")
             print(end="\n")
 
         # for node in self.nodes:

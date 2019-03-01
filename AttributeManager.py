@@ -65,7 +65,7 @@ class AttributeManager:
         training_data = []
         with open(file, 'r') as f:
             for line in f:
-                line= line.replace("\n", "")
+                line = line.replace("\n", "")
                 package = line.split("|")
                 data = []
                 for info in package:
@@ -96,7 +96,7 @@ class AttributeManager:
         for user in game['user']:
             cur_board.board_list[int(user) - 1] = Status.user.value
         #  print completed board
-        cur_board.print_board()
+        # cur_board.print_board()
         return cur_board
 
     def dispatch(self, game, tree):
