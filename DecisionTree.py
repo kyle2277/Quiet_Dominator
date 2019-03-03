@@ -11,7 +11,6 @@ class DecisionTree:
         self.layers = len(self.manager.attributes_dict)
         self.overall_root = TreeNode(0, manager)
         if new_tree:
-            # todo ready for training
             print("ready for training.")
         else:
             self.build_tree(f)
@@ -64,7 +63,6 @@ class DecisionTree:
 
     def decisions_recur(self, root, dec_list):
         for dec, node in root.decisions.items():
-            # todo fix empty decisions
             if dec == ():
                 empty = ("_",)
                 dec_list.append(empty)
@@ -95,7 +93,7 @@ class DecisionTree:
         for i in range(self.layers):
             for node in self.nodes:
                 if node.attribute_number == i:
-                    print('|', node.attribute_name, " ", node.attribute_number, " ", node.decisions, '| ', end="")
+                    print('|', node.attribute_name, " ", node.attribute_number, '| ', end="")
             print(end="\n")
 
         # for node in self.nodes:

@@ -93,6 +93,8 @@ def run(params, manager):
         TREE.print_tree()
         Game(TREE, manager, dimension, numbered)
         TREE.save_tree(CURRENT_TREE)
+        global TREE
+        TREE = DecisionTree(manager, CURRENT_TREE)
     elif command == 'tree':
         # load or view
         if options == '-l':

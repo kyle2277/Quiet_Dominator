@@ -18,8 +18,12 @@ def three_by_three_win(board_list, dimension, player):
             if squares:
                 return squares
     # todo more sophisticated draw detection
-    # if Status.none.value not in board.board_list:
-    #     return [0]*3
+    xs = board_list.count(Status.com.value)
+    os = board_list.count(Status.user.value)
+    total = xs + os
+    if Status.none.value not in board_list and total == (int(dimension)*int(dimension)):
+        print("DRAW")
+        return [0]*3
     return None
 
 

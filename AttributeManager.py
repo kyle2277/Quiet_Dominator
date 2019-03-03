@@ -20,7 +20,6 @@ class AttributeManager:
             return a
 
     def check_list(self, game, decisions, player):
-        # todo decision to make when com and user are empty
         for key, val in decisions.items():
             decision = tuple(game[player])
             if decision == key:
@@ -42,8 +41,6 @@ class AttributeManager:
         while value in taken:
             value = str(random.randint(1, 9))
         return value
-
-    # TODO write a method to check if won or lost
 
     attributes_dict = {
         0: ['first', 'bool', check_first],
@@ -77,8 +74,9 @@ class AttributeManager:
 
     def trainer(self, game, tree, dimension, board=None):
         if not board:
-            board = self.game2board(game, dimension)
+            board = self.game2board(self.clean(game), dimension)
         if board.check_win(board.board_list, dimension, 'com'):
+            # print(board.board_list)
             # send to be added to tree
             self.dispatch(game, tree)
         elif board.check_win(board.board_list, dimension, 'user'):
@@ -88,6 +86,13 @@ class AttributeManager:
             new_game['user'] = game['com']
             self.dispatch(new_game, tree)
             # send to be added to tree
+
+    def clean(self, game):
+        if len(game['com']) > 0 and 'a' in game['com'][0]:
+            game['com'][0] = game['com'][0].replace('a', '')
+        elif len(game['user']) > 0 and 'a' in game['user'][0]:
+            game['user'][0] = game['user'][0].replace('a', '')
+        return game
 
     def game2board(self, game, dimension):
         cur_board = Board(dimension, numbered=False)
@@ -99,12 +104,20 @@ class AttributeManager:
         # cur_board.print_board()
         return cur_board
 
+    def first(self, game):
+        for key in game.keys():
+            if 'a' in game[key][0]:
+                return key
+        return None
+
     def dispatch(self, game, tree):
-        com = game['com']
-        user = game['user']
+        first = self.first(game)
+        game_clean = self.clean(game)
+        com = game_clean['com']
+        user = game_clean['user']
         com_moves = []
         user_moves = []
-        if len(com) >= len(user):  # com goes first
+        if first == 'com':  # com goes first
             print("com first")
             for i in range(len(com)-1):
                 self.send(com_moves, user_moves, com[i], tree)

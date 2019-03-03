@@ -1,6 +1,7 @@
 from Board import Board
 from collections import OrderedDict
 import random
+import copy
 
 
 class Game:
@@ -35,13 +36,17 @@ class Game:
         while not self.game_board.won:
             for player, func in order.items():
                 player_move = func()
-                self.game[player].append(player_move)
+                if len(self.game['com']) == 0 and len(self.game['user']) == 0:
+                    self.game[player].append(str(player_move) + 'a')
+                else:
+                    self.game[player].append(str(player_move))
                 if self.game_board.won:
                     break
         return self.game
 
     def com_move(self):
-        move = self.tree.make_decision(self.game)
+        game_clean = copy.deepcopy(self.game)
+        move = self.tree.make_decision(self.manager.clean(game_clean))
         self.game_board.move(move, 'com')
         return move
 
