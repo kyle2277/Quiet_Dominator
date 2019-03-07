@@ -17,4 +17,4 @@ O | X |
 X | O | X
 </pre>
 Player X has won on the diagonal and this game would be represented, on a single line, by: 1,7,9,6|2,4,8. The string of numbers before the vertical bar represents player X's moves and the string of numbers after represents player O's moves.
-The training module takes an instance of a game and steps through the game one move at a time, adding attribute nodes to the tree.
+The training module takes an instance of a game and steps through it one move at a time, adding attribute nodes to the tree.
