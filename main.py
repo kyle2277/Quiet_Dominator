@@ -1,30 +1,28 @@
 import os.path
 from game import Game
-from TreeNode import TreeNode
 from AttributeManager import AttributeManager
 from DecisionTree import DecisionTree
-from Board import Board
 
-DEFAULT_TREE = '3x3_3.txt'
+DEFAULT_TREE = '3x3.txt'
 CURRENT_TREE = ''
 TREE = None
 
 
 def __init__():
+    global TREE
+    global CURRENT_TREE
     manager = AttributeManager()
     # load default tree
-    global TREE
     TREE = load_tree(DEFAULT_TREE, manager)
     # tree.print_tree()
-    global CURRENT_TREE
     CURRENT_TREE = DEFAULT_TREE
     print("Default tree loaded.")
     main_menu(manager)
 
 
 def load_tree(file, manager):
-    f = open(file, 'r')
     global CURRENT_TREE
+    f = open(file, 'r')
     CURRENT_TREE = file
     if not f.read():
         f.close()
@@ -38,6 +36,7 @@ def load_tree(file, manager):
 
 
 def main_menu(manager):
+    global TREE
     prompt = "vtec"
     while prompt != 'quit':
         prompt = input("ready")
@@ -50,7 +49,6 @@ def main_menu(manager):
             if len(params) < 2:
                 bad_input()
             else:
-                global TREE
                 TREE = run(params, manager)
 
 
@@ -68,6 +66,7 @@ def bad_input():
 
 
 def run(params, manager):
+    global TREE
     command = params[0]
     options = params[1]
     if command == 'train':
@@ -78,7 +77,6 @@ def run(params, manager):
             dimension = params[2]
             file = options
             if os.path.isfile(file):
-                # todo training from main menu
                 manager.train(file, TREE, dimension)
             else:
                 print("file %s does not exists" % file)
@@ -93,7 +91,6 @@ def run(params, manager):
         TREE.print_tree()
         Game(TREE, manager, dimension, numbered)
         TREE.save_tree(CURRENT_TREE)
-        global TREE
         TREE = DecisionTree(manager, CURRENT_TREE)
     elif command == 'tree':
         # load or view

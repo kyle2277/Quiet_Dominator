@@ -81,7 +81,6 @@ class DecisionTree:
             if value_next in root.decisions:
                 value = self.make_decision_recur(game, root.decisions[value_next])
             else:
-                # todo com and user management
                 #  if in playing mode, generate random number that has not been chosen yet
                 print("random")
                 value = self.manager.random(game)

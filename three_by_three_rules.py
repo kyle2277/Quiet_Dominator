@@ -17,7 +17,6 @@ def three_by_three_win(board_list, dimension, player):
             squares = check_diag(num, player, board_list)
             if squares:
                 return squares
-    # todo more sophisticated draw detection
     xs = board_list.count(Status.com.value)
     os = board_list.count(Status.user.value)
     total = xs + os
