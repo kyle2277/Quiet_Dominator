@@ -22,8 +22,8 @@ def __init__():
 
 
 def splash():
-    f = open('splash.txt', 'r')
-    print(f.read())
+    with open('splash.txt', 'r') as f:
+        print(f.read())
 
 
 def load_tree(file, manager):
