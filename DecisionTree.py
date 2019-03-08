@@ -94,11 +94,3 @@ class DecisionTree:
                 if node.attribute_number == i:
                     print('|', node.attribute_name, " ", node.attribute_number, '| ', end="")
             print(end="\n")
-
-        # for node in self.nodes:
-        #     if node.attribute_number == 2:
-        #         print(node.decisions)
-
-
-
-

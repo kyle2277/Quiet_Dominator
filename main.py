@@ -11,6 +11,7 @@ TREE = None
 def __init__():
     global TREE
     global CURRENT_TREE
+    splash()
     manager = AttributeManager()
     # load default tree
     TREE = load_tree(DEFAULT_TREE, manager)
@@ -18,6 +19,11 @@ def __init__():
     CURRENT_TREE = DEFAULT_TREE
     print("Default tree loaded.")
     main_menu(manager)
+
+
+def splash():
+    f = open('splash.txt', 'r')
+    print(f.read())
 
 
 def load_tree(file, manager):

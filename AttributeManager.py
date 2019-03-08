@@ -1,7 +1,6 @@
 import random
 from collections import OrderedDict
 from Board import Board
-import math
 from Status import Status
 from TreeNode import TreeNode
 
