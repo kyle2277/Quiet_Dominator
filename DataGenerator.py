@@ -1,18 +1,27 @@
 import os
 import random
-from collections import  OrderedDict
+import time
+from collections import OrderedDict
 from AttributeManager import AttributeManager
 
 manager = AttributeManager()
 dimensions = 3
 gen_num = 10
 
+# Todo COMMENT EVERYTHING
 
-def __init__():
+
+def main():
+    global gen_num
     file = input("Enter name for new file: ")
+    file = check_txt(file)
     while os.path.isfile(file):
         print("File %s already exists." % file)
+        ask_overwrite = input("Would you like to overwrite this file? [y/n]")
+        if ask_overwrite == 'y':
+            break
         file = input("Enter name for new file: ")
+        file = check_txt(file)
     f = open(file, 'w')
     global gen_num
     get_num = "Motronic"
@@ -24,7 +33,14 @@ def __init__():
                 get_num = None
         except ValueError:
             pass
+    start = time.process_time()
     f.write(generate_data())
+    elapsed = str(time.process_time() - start)
+    print("%s games generated in %s seconds." % (gen_num, elapsed))
+
+
+def check_txt(file):
+    return file if '.txt' in file else file + '.txt'
 
 
 def generate_data():
@@ -32,7 +48,7 @@ def generate_data():
     output = ''
     for x in range(gen_num):
         output = output + generate_game()
-    print(output)
+    return output
 
 
 def generate_game():
@@ -100,5 +116,5 @@ def check_win(p1, p2):
         return None
 
 
-__init__()
+main()
 
