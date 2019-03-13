@@ -4,7 +4,7 @@ from three_by_three_rules import three_by_three_win
 
 class Board:
 
-    def __init__(self, dimension, numbered=True):
+    def __init__(self, dimension, numbered=True, preview=True):
         self.board_list = []
         self.won = False
         # self.board.append([Status.none.value] * dimension)
@@ -17,7 +17,8 @@ class Board:
                 else:
                     self.board_list.append(Status.none.value)
                 count = count + 1
-        self.print_board()
+        if preview:
+            self.print_board()
 
     def move(self, move, player):
         move = int(move)
@@ -25,7 +26,7 @@ class Board:
             return False
         self.board_list[move-1] = Status[player].value
         # print(self.board_list)
-        squares = three_by_three_win(self.board_list, self.dimension, player)
+        squares = self.check_win(self.board_list, self.dimension, player)
         if squares:
             if 0 in squares:
                 # print(squares)

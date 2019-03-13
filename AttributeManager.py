@@ -94,7 +94,7 @@ class AttributeManager:
         return game
 
     def game2board(self, game, dimension):
-        cur_board = Board(dimension, numbered=False)
+        cur_board = Board(dimension, numbered=False, preview=False)
         for com in game['com']:
             cur_board.board_list[int(com) - 1] = Status.com.value
         for user in game['user']:
