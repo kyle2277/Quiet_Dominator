@@ -5,30 +5,42 @@ from AttributeManager import AttributeManager
 
 manager = AttributeManager()
 dimensions = 3
+gen_num = 10
 
 
 def __init__():
-    # todo write game generator
-    # file = input("Enter name for new file: ")
-    # while os.path.isfile(file):
-    #     print("File %s already exists." % file)
-    #     file = input("Enter name for new file: ")
-    # f = open(file, 'w')
-    # f.write(generate_data())
-    generate_data()
+    file = input("Enter name for new file: ")
+    while os.path.isfile(file):
+        print("File %s already exists." % file)
+        file = input("Enter name for new file: ")
+    f = open(file, 'w')
+    global gen_num
+    get_num = "Motronic"
+    while get_num:
+        get_num = input("How many games do you want to generate?\n[enter] Default = %s: " % gen_num)
+        try:
+            if isinstance(int(get_num), int):
+                gen_num = int(get_num)
+                get_num = None
+        except ValueError:
+            pass
+    f.write(generate_data())
 
 
 def generate_data():
-    generate_game()
+    global gen_num
+    output = ''
+    for x in range(gen_num):
+        output = output + generate_game()
+    print(output)
 
 
 def generate_game():
     game = generate_single_game()
     com = ",".join(game['com'])
     user = ",".join(game['user'])
-    game_data = com + "|" + user
-    print(game_data)
-
+    game_data = com + "|" + user + "\n"
+    return game_data
 
 
 def generate_single_game():
@@ -37,11 +49,10 @@ def generate_single_game():
     p2 = []
     o = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     for i in range(4):
-        print(o)
         rand = random.randint(1, len(o))
-        print(rand)
         if len(p1) == 0:
-            p1.append(str(o[rand-1])+'a')
+            append = str(o[rand-1]) + "a"
+            p1.append(append)
         else:
             p1.append(str(o[rand-1]))
         o.pop(rand-1)
@@ -49,7 +60,6 @@ def generate_single_game():
         if check:
             return check
         rand = random.randint(1, len(o))
-        print(rand)
         p2.append(str(o[rand-1]))
         o.pop(rand-1)
         check = check_win(p1, p2)

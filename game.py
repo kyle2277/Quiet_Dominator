@@ -1,7 +1,6 @@
 from Board import Board
 from collections import OrderedDict
 import random
-import copy
 
 
 class Game:
@@ -45,8 +44,7 @@ class Game:
         return self.game
 
     def com_move(self):
-        game_clean = copy.deepcopy(self.game)
-        move = self.tree.make_decision(self.manager.clean(game_clean))
+        move = self.tree.make_decision(self.manager.clean(self.game))
         self.game_board.move(move, 'com')
         return move
 

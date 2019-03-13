@@ -3,6 +3,7 @@ from collections import OrderedDict
 from Board import Board
 from Status import Status
 from TreeNode import TreeNode
+import copy
 
 
 class AttributeManager:
@@ -87,11 +88,12 @@ class AttributeManager:
             # send to be added to tree
 
     def clean(self, game):
-        if len(game['com']) > 0 and 'a' in game['com'][0]:
-            game['com'][0] = game['com'][0].replace('a', '')
-        elif len(game['user']) > 0 and 'a' in game['user'][0]:
-            game['user'][0] = game['user'][0].replace('a', '')
-        return game
+        game_clean = copy.deepcopy(game)
+        if len(game_clean['com']) > 0 and 'a' in game_clean['com'][0]:
+            game_clean['com'][0] = game_clean['com'][0].replace('a', '')
+        elif len(game_clean['user']) > 0 and 'a' in game_clean['user'][0]:
+            game_clean['user'][0] = game_clean['user'][0].replace('a', '')
+        return game_clean
 
     def game2board(self, game, dimension):
         cur_board = Board(dimension, numbered=False, preview=False)
