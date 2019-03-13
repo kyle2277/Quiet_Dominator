@@ -37,7 +37,7 @@ def load_tree(file, manager):
     else:
         f.close()
         tree = DecisionTree(manager, file)
-        tree.print_tree()
+        # tree.print_tree()
     return tree
 
 
@@ -94,7 +94,7 @@ def run(params, manager):
             if params[2] == '-n':
                 numbered = True
         dimension = options
-        TREE.print_tree()
+        # TREE.print_tree()
         Game(TREE, manager, dimension, numbered)
         TREE.save_tree(CURRENT_TREE)
         TREE = DecisionTree(manager, CURRENT_TREE)

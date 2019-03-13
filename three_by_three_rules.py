@@ -21,7 +21,7 @@ def three_by_three_win(board_list, dimension, player):
     os = board_list.count(Status.user.value)
     total = xs + os
     if Status.none.value not in board_list and total == (int(dimension)*int(dimension)):
-        print("DRAW")
+        # print("DRAW")
         return [0]*3
     return None
 

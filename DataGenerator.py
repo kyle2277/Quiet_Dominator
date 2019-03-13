@@ -107,10 +107,10 @@ def check_win(p1, p2):
     squares_com = board.check_win(board.board_list, dimensions, 'com')
     squares_user = board.check_win(board.board_list, dimensions, 'user')
     if squares_com:
-        board.print_board(win=True, squares=squares_com)
+        # board.print_board(win=True, squares=squares_com)
         return game
     elif squares_user:
-        board.print_board(win=True, squares=squares_user)
+        # board.print_board(win=True, squares=squares_user)
         return array2game(p1, p2, switch=True)
     else:
         return None
