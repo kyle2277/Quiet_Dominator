@@ -1,5 +1,5 @@
 import os
-from TreeNode import TreeNode
+from src.TreeNode import TreeNode
 
 
 class DecisionTree:

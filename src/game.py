@@ -1,4 +1,4 @@
-from Board import Board
+from src.Board import Board
 from collections import OrderedDict
 import random
 

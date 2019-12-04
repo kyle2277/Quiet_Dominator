@@ -1,5 +1,5 @@
-from Status import Status
-from three_by_three_rules import three_by_three_win
+from src.Status import Status
+from src.three_by_three_rules import three_by_three_win
 
 
 class Board:

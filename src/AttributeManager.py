@@ -1,8 +1,8 @@
 import random
 from collections import OrderedDict
-from Board import Board
-from Status import Status
-from TreeNode import TreeNode
+from src.Board import Board
+from src.Status import Status
+from src.TreeNode import TreeNode
 import copy
 
 

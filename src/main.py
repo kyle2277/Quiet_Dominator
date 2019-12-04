@@ -1,9 +1,9 @@
 import os.path
-from game import Game
-from AttributeManager import AttributeManager
-from DecisionTree import DecisionTree
+from src.game import Game
+from src.AttributeManager import AttributeManager
+from src.DecisionTree import DecisionTree
 
-DEFAULT_TREE = '3x3.txt'
+DEFAULT_TREE = '../aux/3x3.txt'
 CURRENT_TREE = ''
 TREE = None
 
@@ -22,7 +22,7 @@ def __init__():
 
 
 def splash():
-    with open('splash.txt', 'r') as f:
+    with open('../aux/splash.txt', 'r') as f:
         print(f.read())
 
 
@@ -45,7 +45,7 @@ def main_menu(manager):
     global TREE
     prompt = "vtec"
     while prompt != 'quit':
-        prompt = input("ready")
+        prompt = input("ready\n")
         if prompt == 'help':
             print_help()
         elif prompt == 'quit':

@@ -1,4 +1,4 @@
-from Status import Status
+from src.Status import Status
 
 
 def three_by_three_win(board_list, dimension, player):

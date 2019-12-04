@@ -2,7 +2,7 @@ import os
 import random
 import time
 from collections import OrderedDict
-from AttributeManager import AttributeManager
+from src.AttributeManager import AttributeManager
 
 manager = AttributeManager()
 dimensions = 3
