@@ -1,4 +1,4 @@
-<img src=https://github.com/kyle2277/Quiet_Dominator/blob/master/QD_logo.png width="300" height="200"></img>
+<img src=https://github.com/kyle2277/Quiet_Dominator/blob/master/aux/QD_logo.png width="300" height="200"></img>
 ___
 # Quiet Dominator
 ## Overview
